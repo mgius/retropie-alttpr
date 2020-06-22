@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "retropie-alttpr"
+version = "0.1.0"
+description = "An EmulationStation Frontend for generating A Link to the Past Randomizer games"
+authors = ["retropie-alttpr@markgius.com"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pyz3r = "^4.8.3"
+click = "^7.1.2"
+loguru = "^0.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+ipython = "^7.15.0"
+
+[tool.poetry.scripts]
+generate_rom = 'retropie_alttpr.generate:main'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
