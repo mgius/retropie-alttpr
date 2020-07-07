@@ -346,6 +346,14 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 category = "main"
+description = "A Python interface to the UNIX dialog utility and mostly-compatible programs"
+name = "pythondialog"
+optional = false
+python-versions = ">=3"
+version = "3.5.1"
+
+[[package]]
+category = "main"
 description = "A python module for interacting with the web API of various randomizers, such as https://alttpr.com or https://samus.link."
 name = "pyz3r"
 optional = false
@@ -395,7 +403,7 @@ description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
 optional = false
 python-versions = "*"
-version = "0.2.4"
+version = "0.2.5"
 
 [[package]]
 category = "main"
@@ -435,7 +443,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "c0755272b0785620b9f328f0d2a35d873f3c7629caabaef2e39482df3cd32bb6"
+content-hash = "fed523145bf1423e24b73f88c15092ac6dba8e78b2e9df25776bde3671d12208"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -584,6 +592,10 @@ pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
 ]
+pythondialog = [
+    {file = "pythondialog-3.5.1-py3-none-any.whl", hash = "sha256:b50494be494069aa5aa1b975072ab8de282850cc6c75a002d1a180ad1a27f45f"},
+    {file = "pythondialog-3.5.1.tar.gz", hash = "sha256:34a0687290571f37d7d297514cc36bd4cd044a3a4355271549f91490d3e7ece8"},
+]
 pyz3r = [
     {file = "pyz3r-4.8.3.tar.gz", hash = "sha256:49e2253c709d009ff214517bffc87d8658fc77f8b7907fa7cb84a1623f3ea4b0"},
 ]
@@ -600,8 +612,8 @@ traitlets = [
     {file = "traitlets-4.3.3.tar.gz", hash = "sha256:d023ee369ddd2763310e4c3eae1ff649689440d4ae59d7485eb4cfbbe3e359f7"},
 ]
 wcwidth = [
-    {file = "wcwidth-0.2.4-py2.py3-none-any.whl", hash = "sha256:79375666b9954d4a1a10739315816324c3e73110af9d0e102d906fdb0aec009f"},
-    {file = "wcwidth-0.2.4.tar.gz", hash = "sha256:8c6b5b6ee1360b842645f336d9e5d68c55817c26d3050f46b235ef2bc650e48f"},
+    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
+    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
 ]
 win32-setctime = [
     {file = "win32_setctime-1.0.1-py3-none-any.whl", hash = "sha256:568fd636c68350bcc54755213fe01966fe0a6c90b386c0776425944a0382abef"},

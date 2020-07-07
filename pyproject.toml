@@ -9,6 +9,7 @@ python = "^3.7"
 pyz3r = "^4.8.3"
 click = "^7.1.2"
 loguru = "^0.5.1"
+pythondialog = "^3.5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
