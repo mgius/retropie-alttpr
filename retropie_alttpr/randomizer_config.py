@@ -41,9 +41,10 @@ seed generation format is used as the canonical format
 import abc
 from dataclasses import asdict, dataclass, field, replace, fields
 
-from typing import List, Generic, TypeVar
+from typing import Generic, List, TypeVar
 
-GenericBaseConfig = Generic[TypeVar['BaseConfig']]
+
+GenericBaseConfig = Generic[TypeVar('BaseConfig')]
 
 
 @dataclass
@@ -73,9 +74,11 @@ class BaseConfig(abc.ABC):
         field_mappings = self.get_preset_field_mappings()
         updates = {}
 
-        for config_name, preset_name in field_mappings:
-            if preset_name in preset:
-                updates[config_name] = preset[preset_name]
+        for field_map in field_mappings:
+            target_name = field_map.target_name
+            source_name = field_map.source_name
+            if source_name in preset:
+                updates[target_name] = preset[source_name]
 
         return replace(self, **updates)
 
@@ -84,16 +87,16 @@ class BaseConfig(abc.ABC):
 class CrystalConfig(BaseConfig):
     # serverside these seem to be interchangably int or str, and str is used
     # because "random" is a value
-    ganon: str = field("7", metadata={'override_preset': 'ganon_open'})
-    tower: str = field("7", metadata={'override_preset': 'tower_open'})
+    ganon: str = field(default="7", metadata={'override_preset': 'ganon_open'})
+    tower: str = field(default="7", metadata={'override_preset': 'tower_open'})
 
 
 @dataclass
 class ItemConfig(BaseConfig):
     functionality: str = field(
-        "normal", metadata={'override_preset': 'item_functionality'})
+        default="normal", metadata={'override_preset': 'item_functionality'})
     pool: str = field(
-        "normal", metadata={'override_preset': 'item_pool'})
+        default="normal", metadata={'override_preset': 'item_pool'})
 
 
 @dataclass
@@ -109,14 +112,14 @@ class RandomizerConfig(BaseConfig):
     accessibility: str = "items"
     dungeon_items: str = "standard"
     entrances: str = field(
-        "none", metadata={'override_preset': 'entrance_shuffle'})
+        default="none", metadata={'override_preset': 'entrance_shuffle'})
     glitches: str = field(
-        "none", metadata={'override_preset': 'glitches_required'})
+        default="none", metadata={'override_preset': 'glitches_required'})
     goal: str = "ganon"
     hints: str = "on"
     item_placement: str = "advanced"
     lang: str = "en"
-    mode: str = field("open", metadata={'override_preset': 'world_state'})
+    mode: str = field(default="open", metadata={'override_preset': 'world_state'})
     spoilers: str = "off"
     tournament: bool = True
     weapons: str = "randomized"

@@ -1,52 +1,39 @@
+import asyncio
+import functools
+import json
 import pyz3r
 
+from retropie_alttpr import cache
 
-def convert_randomizer_settings(web_dict):
-    """
-    Convert web/JS randomizer presets to API compatible presets
-
-    There is no API from ALTTPR website to provide API compatible generation
-    configs.  There is, however, an API for web/JS compatible presets.  This
-    method converts those presets so that they can be used with this library.
-    """
-    return {
-            "glitches": web_dict.get("glitches_required"),
-            "item_placement": web_dict.get("item_placement"),
-            "dungeon_items": web_dict.get("dungeon_items"),
-            "accessibility": web_dict.get("accessibility"),
-            "goal": web_dict.get("goal"),
-            "crystals": {
-                "ganon": web_dict.get("ganon_open"),
-                "tower": web_dict.get("tower_open"),
-                },
-            "mode": web_dict.get("world_state"),
-            "entrances": web_dict.get("entrance_shuffle"),
-            "hints": web_dict.get("hints"),
-            "weapons": web_dict.get("weapons"),
-            "item": {
-                "pool": web_dict.get("item_pool"),
-                "functionality": web_dict.get("item_functionality"),
-                },
-            "lang": "en",
-            "enemizer": {
-                "boss_shuffle": web_dict.get("boss_shuffle"),
-                "enemy_shuffle": web_dict.get("enemy_shuffle"),
-                "enemy_damage": web_dict.get("enemy_damage"),
-                "enemy_health": web_dict.get("enemy_health"),
-                }
-           }
+from loguru import logger
 
 
-async def fetch_presets():
-    """ Load presets from ALTTPR website, converted """
+def async_to_sync(fun):
+    @functools.wraps(fun)
+    def wrapped(*args, **kwargs):
+        return asyncio.run(fun(*args, **kwargs))
+
+    return wrapped
+
+
+@async_to_sync
+async def _fetch_randomizer_settings():
+    """ Load presets from ALTTPR website """
     # load default randomizer settings from alttpr
+    logger.debug("Fetching presets from alttpr", enqueue=True)
     alttpr = await pyz3r.alttpr()
     all_settings = await alttpr.randomizer_settings()
 
-    out = {}
-    for name, settings in all_settings['presets'].items():
-        if name == 'custom':
-            continue
-        out[name] = convert_randomizer_settings(settings)
+    return all_settings
 
-    return out
+
+def fetch_randomizer_settings():
+    cache_key = 'randomizer_settings'
+    all_settings = cache.misc.get(cache_key)
+    if all_settings is None:
+        all_settings = _fetch_randomizer_settings()
+        cache.misc.put('cache_key', json.dumps(all_settings).encode('utf-8'))
+    else:
+        all_settings = json.loads(all_settings)
+
+    return all_settings
