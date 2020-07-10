@@ -2,7 +2,7 @@
 name = "retropie-alttpr"
 version = "0.1.0"
 description = "An EmulationStation Frontend for generating A Link to the Past Randomizer games"
-authors = ["retropie-alttpr@markgius.com"]
+authors = ["Mark Gius <retropie-alttpr@markgius.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -16,6 +16,7 @@ pytest = "^5.2"
 ipython = "^7.15.0"
 
 [tool.poetry.scripts]
+config = 'scripts.config:main'
 generate_rom = 'scripts.generate:main'
 test_script = 'scripts.test_script:main'
 

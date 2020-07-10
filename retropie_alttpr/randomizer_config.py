@@ -58,6 +58,13 @@ FieldMappings = List[FieldMapping]
 
 @dataclass
 class BaseConfig(abc.ABC):
+    def get_preset_field_mappings_dict(cls) -> dict:
+        out = {}
+        for fld in fields(cls):
+            out[fld.name] = fld.metadata.get('override_preset', fld.name)
+
+        return out
+
     def get_preset_field_mappings(cls) -> FieldMappings:
         out = []
         for fld in fields(cls):
@@ -81,6 +88,21 @@ class BaseConfig(abc.ABC):
                 updates[target_name] = preset[source_name]
 
         return replace(self, **updates)
+
+    def export_as_preset(self) -> dict:
+        field_mappings = self.get_preset_field_mappings()
+        out = {}
+        for field_map in field_mappings:
+            target_name = field_map.target_name
+            source_name = field_map.source_name
+            value = getattr(self, target_name)
+            if hasattr(value, 'export_as_preset'):
+                out.update(value.export_as_preset())
+                continue
+
+            out[source_name] = value
+
+        return out
 
 
 @dataclass
@@ -144,3 +166,7 @@ def from_preset_dict(preset_dict: dict) -> RandomizerConfig:
     config.item = config.item.replace_from_preset(preset_dict)
     config.enemizer = config.enemizer.replace_from_preset(preset_dict)
     return config
+
+
+def to_preset_dict(config: RandomizerConfig) -> dict:
+    return config.export_as_preset()

@@ -1,11 +1,10 @@
 import asyncio
 import functools
-import json
-import pyz3r
+import os
+import tempfile
 
-from retropie_alttpr import cache
 
-from loguru import logger
+DEFAULT_MEMORY_TMPDIR = os.environ.get('XDG_RUNTIME_DIR', '/dev/shm')
 
 
 def async_to_sync(fun):
@@ -16,24 +15,33 @@ def async_to_sync(fun):
     return wrapped
 
 
-@async_to_sync
-async def _fetch_randomizer_settings():
-    """ Load presets from ALTTPR website """
-    # load default randomizer settings from alttpr
-    logger.debug("Fetching presets from alttpr", enqueue=True)
-    alttpr = await pyz3r.alttpr()
-    all_settings = await alttpr.randomizer_settings()
+def invert_dict(source):
+    """ Invert a dict
 
-    return all_settings
+    Behavior if multiple values are the same is undefined
+    """
+    out = {}
+    for k, v in source.items():
+        out[v] = k
+
+    return out
 
 
-def fetch_randomizer_settings():
-    cache_key = 'randomizer_settings'
-    all_settings = cache.misc.get(cache_key)
-    if all_settings is None:
-        all_settings = _fetch_randomizer_settings()
-        cache.misc.put('cache_key', json.dumps(all_settings).encode('utf-8'))
-    else:
-        all_settings = json.loads(all_settings)
+def dict_no_none(*args, **kwargs):
+    orig = dict(*args, **kwargs)
+    return dict((k, v) for k, v in orig.items() if v is not None)
 
-    return all_settings
+
+def in_memory_tempfile(**kwargs):
+    """ Create a named temporary file in the in memory filesystem
+
+    Crappy MicroSD cards and limiting disk IO is a thing in the RaspPi
+    community and pyz3r explicitly wants to write to files, not file streams or
+    anything like that.
+
+    So we'll use the systemd user tmp folder or /dev/shm.
+
+    If neither of these exist, I think this will error out.
+    """
+    kwargs.setdefault('dir', DEFAULT_MEMORY_TMPDIR)
+    return tempfile.NamedTemporaryFile(**kwargs)
