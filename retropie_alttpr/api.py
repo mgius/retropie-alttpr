@@ -54,7 +54,6 @@ async def validate_rom(rom_filename):
 
 @util.async_to_sync
 async def generate_rom(settings: dict):
-    import pdb; pdb.set_trace()
     seed = await pyz3r.alttpr(
         settings=settings
     )
